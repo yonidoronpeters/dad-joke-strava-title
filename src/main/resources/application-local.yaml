@@ -1,0 +1,23 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: create
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  datasource:
+    url: "jdbc:postgresql://localhost:5432/postgres"
+    username: compose-postgres
+    password: compose-postgres
+
+strava:
+  push-subscription-url: https://www.strava.com/api/v3/push_subscriptions
+  client:
+    id: ${STRAVA_CLIENT_ID}
+    secret: ${STRAVA_CLIENT_SECRET}
+  auth:
+    authorize-url: "https://www.strava.com/oauth/authorize?client_id=${STRAVA_CLIENT_ID}&response_type=code&redirect_uri=${joke.redirect-url}&approval_prompt=force&scope=read,activity:read_all,activity:write"
+    token-url: "https://www.strava.com/oauth/token"
+
+joke:
+  callback-url: http://localhost:5000/subscribe/callback
+  redirect-url: http://localhost:5000/oauth/exchange_token
+  verify-token: ${STRAVA_VERIFY_TOKEN}
