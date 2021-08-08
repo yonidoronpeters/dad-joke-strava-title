@@ -33,6 +33,7 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-thymeleaf') {
         exclude group: 'nz.net.ultraq.thymeleaf', module: 'thymeleaf-layout-dialect'
     }
+    compile("org.springframework.boot:spring-boot-starter-data-jpa")
 
     compile 'org.postgresql:postgresql:9.4.1212'
     compile 'com.zaxxer:HikariCP:2.6.0'
@@ -41,12 +42,9 @@ dependencies {
     compile 'org.webjars:jquery-ui:1.11.4'
     compile 'org.webjars:bootstrap:3.3.6'
 
-//    implementation("org.jetbrains.kotlin:kotlin-reflect")
-//    compile("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("com.github.kittinunf.fuel:fuel:2.2.3")
     implementation("com.github.kittinunf.fuel:fuel-jackson:2.2.3")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.9.8")
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
