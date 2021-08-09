@@ -7,5 +7,5 @@ data class EventDataDto(
     val updates: Map<String, String>,
     val owner_id: String,
     val subscription_id: String,
-    val event_time: String
+    val event_time: Long
 )
