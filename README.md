@@ -2,7 +2,7 @@
 This app is meant to spice up your Strava activity feed. It calls an API to get a random dad joke. Then sets your Strava activity title to display the joke.
 
 ## Running Locally
-Make sure you have Java and Maven installed.  Also, install the [Heroku CLI](https://cli.heroku.com/).
+Make sure you have Java 8 installed.  Also, install the [Heroku CLI](https://cli.heroku.com/) if you plan to deploy to Heroku.
 
 ```sh
 $ git clone https://github.com/yonidoronpeters/dad-joke-strava-title.git
