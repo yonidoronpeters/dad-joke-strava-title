@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("oauth")
 class OAuthController(
-    val service: OAuthTokenService
+    private val service: OAuthTokenService
 ) {
 
     private val logger: Logger = LoggerFactory.getLogger(OAuthController::class.java)

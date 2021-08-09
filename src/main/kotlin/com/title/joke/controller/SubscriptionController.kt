@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("subscribe")
 class SubscriptionController(
-    val service: SubscriptionService,
+    private val service: SubscriptionService,
     @Value("\${joke.verify-token}")
     val verifyToken: String
 ) {
@@ -17,12 +17,14 @@ class SubscriptionController(
 
     @PostMapping
     fun createSubscription(): String {
-        // Only 1 subscription can be created for the app. All events will be sent for athletes that authorize the app
+        // Only 1 subscription can be created for the APP. All events will be sent for athletes that authorize the app
+        // This endpoint should be called manually 1 time after the app is deployed. Then app will receive events for all
+        // athletes to url joke.callback-url
         val subscriptionId = service.createSubscription()
         return "Subscription created successfully with id: $subscriptionId"
     }
 
-    @GetMapping("callback", produces = arrayOf("application/json"))
+    @GetMapping("callback", produces = ["application/json"])
     fun callback(
         @RequestParam("hub.mode") mode: String,
         @RequestParam("hub.challenge") challenge: String,
@@ -45,8 +47,7 @@ class SubscriptionController(
     }
 
     // TODO
+    // add endpoint to eventscontroller
     // view subscription
     // delete subscription
-    // deploy app to cloud
-    // update callback-url to where app is deployed
 }

@@ -11,5 +11,5 @@ data class AthleteToken(
     val lastName: String = "",
     val access_token: String = "",
     val refresh_token: String = "",
-    val expires_at: String = ""
+    val expires_at: Long = 0
 )
