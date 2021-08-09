@@ -49,7 +49,7 @@ class ActivityService(
                 """
                          {
                             "name": "${JsonEscape.escapeJson(activityTitle)}",
-                            "description": "\nGet funny Dad jokes for your activity at https://dad-joke-strava-title.herokuapp.com. \n\nJoke is automatically generated from: https://icanhazdadjoke.com. If you find the title hurtful, please contact me and I will take it down."
+                            "description": "\nGet funny Dad jokes for your activity at https://dad-joke-strava-title.herokuapp.com. \n\nJoke is automatically generated from: https://icanhazdadjoke.com. If you find the title offensive, please contact me and I will take it down."
                          }
                      """.trimIndent()
             )
