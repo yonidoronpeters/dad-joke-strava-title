@@ -1,16 +1,28 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title>Kotlin Getting Started on Heroku</title>
+  <title>Dad Joke Strava Title</title>
   <div th:replace="fragments/layout :: css"/>
 </head>
 <body>
 
-<div th:replace="fragments/layout :: header"/>
-  <body>
-    <p th:text="${message}">Exception message</p>
-  </body>
-<div th:replace="fragments/layout :: footer"/>
+<div class="jumbotron text-center">
+  <div class="container">
+    <a href="/" class="lang-logo">
+      <img src="/awesome-face-cry.png"/>
+    </a>
+    <h1>Uh oh!</h1>
+    <p>This app doesn't work without write permissions. Please try again and check the box for <i><b>"Upload your
+      activities from Dad joke title generator to Strava"</b></i></p>
+    <a type="button" class="btn btn-lg btn-default" href="https://dad-joke-strava-title.herokuapp.com/register"><span
+        class="glyphicon glyphicon-flash"></span> Register</a>
+  </div>
+</div>
+<div class="container">
+  <div class="alert alert-info text-center" role="alert">
+    We don't actually upload activities for you. But Strava does not have separate permissions for update and create.
+  </div>
+</div>
 
 </body>
 </html>
