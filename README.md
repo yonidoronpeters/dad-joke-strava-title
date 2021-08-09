@@ -18,7 +18,7 @@ $ SPRING_PROFILES_ACTIVE=local ./gradlew bootRun
 The app should now be running on [localhost:5000](http://localhost:5000/).
 
 ## Deploying to Heroku
-This app is meant to be easily deployable to Heroku. It was create from the [Getting Started with Kotlin on Heroku](https://github.com/heroku/kotlin-getting-started.git) app.
+This app is meant to be easily deployable to Heroku. It was created from the [Getting Started with Kotlin on Heroku](https://github.com/heroku/kotlin-getting-started.git) app.
 
 [![Deploy to Heroku](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
 
