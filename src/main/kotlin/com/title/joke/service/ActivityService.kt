@@ -48,6 +48,7 @@ class ActivityService(
                 """
                          {
                             "name": "$activityTitle"
+                            "description": "Joke is randomly generated from: https://icanhazdadjoke.com. If you find it hurtful, please contact me and I will take it down"
                          }
                      """.trimIndent()
             )
