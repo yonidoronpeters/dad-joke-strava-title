@@ -12,6 +12,7 @@ import com.title.joke.dto.EventDataDto
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
+import org.unbescape.json.JsonEscape
 
 @Service
 class ActivityService(
@@ -47,8 +48,8 @@ class ActivityService(
             .jsonBody(
                 """
                          {
-                            "name": "$activityTitle"
-                            "description": "Joke is randomly generated from: https://icanhazdadjoke.com. If you find it hurtful, please contact me and I will take it down"
+                            "name": "${JsonEscape.escapeJson(activityTitle)}",
+                            "description": "Joke is automatically generated from: https://icanhazdadjoke.com. If you find it hurtful, please contact me and I will take it down"
                          }
                      """.trimIndent()
             )
