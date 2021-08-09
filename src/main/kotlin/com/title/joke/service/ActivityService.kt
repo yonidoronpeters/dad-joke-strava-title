@@ -3,7 +3,6 @@ package com.title.joke.service
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import com.github.kittinunf.fuel.core.FuelManager
 import com.github.kittinunf.fuel.core.extensions.jsonBody
 import com.github.kittinunf.fuel.httpPut
 import com.github.kittinunf.fuel.jackson.responseObject
@@ -18,7 +17,8 @@ import org.springframework.stereotype.Service
 class ActivityService(
     @Value("\${strava.base-activity-url}")
     val baseActivityUrl: String,
-    private val tokenService: OAuthTokenService
+    private val tokenService: OAuthTokenService,
+    private val titleService: TitleService
 ) {
     private val logger = LoggerFactory.getLogger(ActivityService::class.java)
 
@@ -28,13 +28,13 @@ class ActivityService(
             if (eventData.aspect_type == "create") {
                 logger.debug("Fetching athlete token")
                 val bearerToken = tokenService.getTokenForAthlete(eventData.owner_id)
-
-                updateTitleOnStrava(eventData, bearerToken)
+                val activityTitle = titleService.generateTitle()
+                updateTitleOnStrava(bearerToken, activityTitle, eventData)
             }
         }
     }
 
-    private fun updateTitleOnStrava(eventData: EventDataDto, bearerToken: String) {
+    private fun updateTitleOnStrava(bearerToken: String, activityTitle: String, eventData: EventDataDto) {
         logger.info("Updating activity title for $baseActivityUrl${eventData.object_id}")
 
         val mapper = ObjectMapper().registerKotlinModule()
@@ -47,7 +47,7 @@ class ActivityService(
             .jsonBody(
                 """
                          {
-                            "name": "testing testing 123"
+                            "name": "$activityTitle"
                          }
                      """.trimIndent()
             )
