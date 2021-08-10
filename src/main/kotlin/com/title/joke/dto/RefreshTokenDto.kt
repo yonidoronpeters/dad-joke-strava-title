@@ -1,8 +1,7 @@
 package com.title.joke.dto
 
-data class TokenDto(
+data class RefreshTokenDto(
     val refresh_token: String,
     val access_token: String,
-    val expires_at: Long,
-    val athlete: AthleteDto
+    val expires_at: Long
 )

@@ -7,6 +7,7 @@ import com.github.kittinunf.fuel.core.FuelManager
 import com.github.kittinunf.fuel.httpPost
 import com.github.kittinunf.fuel.jackson.responseObject
 import com.github.kittinunf.result.Result
+import com.title.joke.dto.RefreshTokenDto
 import com.title.joke.dto.TokenDto
 import com.title.joke.entity.AthleteToken
 import com.title.joke.repository.AthleteTokenRepository
@@ -90,7 +91,7 @@ class OAuthTokenService(
 
         val (_, response, result) = stravaOAuthTokenUrl
             .httpPost()
-            .responseObject<TokenDto>(mapper)
+            .responseObject<RefreshTokenDto>(mapper)
 
         when (result) {
             is Result.Failure -> {
