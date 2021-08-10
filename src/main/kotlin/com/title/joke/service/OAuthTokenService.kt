@@ -67,7 +67,7 @@ class OAuthTokenService(
             dto.refresh_token,
             dto.expires_at
         )
-        logger.info("Saving athlete token to database: $athleteToken")
+        logger.info("Saving athlete token to database for athlete: ${athleteToken.id}")
         repository.save(athleteToken)
     }
 
@@ -80,6 +80,7 @@ class OAuthTokenService(
     }
 
     private fun refreshToken(athleteEntity: AthleteToken): String {
+        logger.debug("Refreshing token for athlete: ${athleteEntity.id}")
         FuelManager.instance.baseParams = listOf(
             "client_id" to clientId,
             "client_secret" to clientSecret,
@@ -96,6 +97,7 @@ class OAuthTokenService(
         when (result) {
             is Result.Failure -> {
                 val e = result.getException()
+                logger.error("Strava API returned ${response.statusCode} with body ${response.body()}")
                 logger.error("Error while trying to refresh access token from Strava", e)
                 throw e
             }

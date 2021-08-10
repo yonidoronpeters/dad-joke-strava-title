@@ -27,12 +27,24 @@ class ActivityService(
         // TODO refactor to use chain of responsibilities
         if (eventData.object_type == "activity") {
             if (eventData.aspect_type == "create") {
-                logger.debug("Fetching athlete token")
-                val bearerToken = tokenService.getTokenForAthlete(eventData.owner_id)
-                val activityTitle = titleService.generateTitle()
-                updateTitleOnStrava(bearerToken, activityTitle, eventData)
+                logger.info("Setting title for activity: ${eventData.object_id}")
+                updateTitle(eventData)
+            } else if (eventData.aspect_type == "update") {
+                if (eventData.updates.containsKey("title") &&
+                    eventData.updates["title"].equals("next title", ignoreCase = true)
+                ) {
+                    logger.info("User requested different title for activity: ${eventData.object_id}")
+                    updateTitle(eventData)
+                }
             }
         }
+        // TODO add app de-authorize event handling
+    }
+
+    private fun updateTitle(eventData: EventDataDto) {
+        val bearerToken = tokenService.getTokenForAthlete(eventData.owner_id)
+        val activityTitle = titleService.generateTitle()
+        updateTitleOnStrava(bearerToken, activityTitle, eventData)
     }
 
     private fun updateTitleOnStrava(bearerToken: String, activityTitle: String, eventData: EventDataDto) {
@@ -42,7 +54,7 @@ class ActivityService(
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
         // TODO change to Async
-        val (_, _, result) = "$baseActivityUrl${eventData.object_id}"
+        val (_, response, result) = "$baseActivityUrl${eventData.object_id}"
             .httpPut()
             .header("Authorization", bearerToken)
             .jsonBody(
@@ -58,12 +70,13 @@ class ActivityService(
         when (result) {
             is Result.Failure -> {
                 val e = result.getException()
+                logger.error("Strava API returned ${response.statusCode} with body ${response.body()}")
                 logger.error("Error when updating activity with id: ${eventData.object_id}", e)
                 throw e
             }
             is Result.Success -> {
                 val dto: ActivityDto = result.get()
-                logger.info("Successfully updated activity with id:${dto.id} to name: ${dto.name}")
+                logger.info("Successfully updated activity with id:${dto.id} to title: ${dto.name}")
             }
         }
     }
