@@ -7,8 +7,8 @@ import javax.persistence.Id
 data class AthleteToken(
     @Id
     val id: String = "",
-    val firstName: String = "",
-    val lastName: String = "",
+    val firstName: String? = "",
+    val lastName: String? = "",
     val access_token: String = "",
     val refresh_token: String = "",
     val expires_at: Long = 0
