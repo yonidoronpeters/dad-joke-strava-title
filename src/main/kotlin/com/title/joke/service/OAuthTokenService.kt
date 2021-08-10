@@ -13,6 +13,7 @@ import com.title.joke.repository.AthleteTokenRepository
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
+import java.time.Instant
 import java.util.*
 
 @Service
@@ -71,7 +72,7 @@ class OAuthTokenService(
 
     fun getTokenForAthlete(athleteId: String): String {
         val athleteEntity = repository.getOne(athleteId)
-        if (athleteEntity.expires_at < Date().time) {
+        if (Date().before(Date.from(Instant.ofEpochSecond(athleteEntity.expires_at)))) {
             return "Bearer ${athleteEntity.access_token}"
         }
         return refreshToken(athleteEntity)
@@ -87,7 +88,7 @@ class OAuthTokenService(
         val mapper = ObjectMapper().registerKotlinModule()
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
-        val (_, _, result) = stravaOAuthTokenUrl
+        val (_, response, result) = stravaOAuthTokenUrl
             .httpPost()
             .responseObject<TokenDto>(mapper)
 
