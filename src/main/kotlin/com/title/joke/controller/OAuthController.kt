@@ -22,7 +22,7 @@ class OAuthController(
         @RequestParam("scope") scopes: List<String>
     ): String {
         logger.info("user permitted scopes: $scopes")
-        if (!scopes.contains("activity:write")) {
+        if (!scopes.containsAll(listOf("activity:write", "activity:read_all"))) {
             return "error"
         }
         service.authorizeApp(code)
