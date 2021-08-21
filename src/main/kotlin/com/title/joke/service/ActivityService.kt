@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.unbescape.json.JsonEscape
+import kotlin.collections.LinkedHashMap
 
 @Service
 class ActivityService(
@@ -22,16 +23,23 @@ class ActivityService(
     private val titleService: TitleService
 ) {
     private val logger = LoggerFactory.getLogger(ActivityService::class.java)
+    private val maxEntries = 30
+    private val eventsCache = object : LinkedHashMap<String, EventDataDto>(maxEntries) {
+        override fun removeEldestEntry(eldest: MutableMap.MutableEntry<String, EventDataDto>?): Boolean {
+            return size > maxEntries
+        }
+    }
 
     fun updateActivity(eventData: EventDataDto) {
         // TODO refactor to use chain of responsibilities
         if (eventData.object_type == "activity") {
             if (eventData.aspect_type == "create") {
+                if (isDuplicateCreateEvent(eventData)) return
                 logger.info("Setting title for activity: ${eventData.object_id}")
                 updateTitle(eventData)
             } else if (eventData.aspect_type == "update") {
                 if (eventData.updates.containsKey("title") &&
-                    eventData.updates["title"].equals("next title", ignoreCase = true)
+                    eventData.updates["title"]?.trim().equals("next title", ignoreCase = true)
                 ) {
                     logger.info("User requested different title for activity: ${eventData.object_id}")
                     updateTitle(eventData)
@@ -39,6 +47,16 @@ class ActivityService(
             }
         }
         // TODO add app de-authorize event handling
+    }
+
+    private fun isDuplicateCreateEvent(eventData: EventDataDto): Boolean {
+        if (eventsCache.containsKey(eventData.object_id)) {
+            logger.info("Received duplicate event $eventData")
+            return true
+        } else {
+            eventsCache[eventData.object_id] = eventData
+        }
+        return false
     }
 
     private fun updateTitle(eventData: EventDataDto) {
