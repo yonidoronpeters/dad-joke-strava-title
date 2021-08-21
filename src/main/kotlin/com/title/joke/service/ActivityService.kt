@@ -30,7 +30,7 @@ class ActivityService(
         }
     }
 
-    fun updateActivity(eventData: EventDataDto) {
+    suspend fun updateActivity(eventData: EventDataDto) {
         // TODO refactor to use chain of responsibilities
         if (eventData.object_type == "activity") {
             if (eventData.aspect_type == "create") {
@@ -71,7 +71,6 @@ class ActivityService(
         val mapper = ObjectMapper().registerKotlinModule()
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
-        // TODO change to Async
         val (_, response, result) = "$baseActivityUrl${eventData.object_id}"
             .httpPut()
             .header("Authorization", bearerToken)
