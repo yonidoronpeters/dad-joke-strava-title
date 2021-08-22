@@ -46,7 +46,9 @@ class ActivityService(
                 }
             }
         }
-        // TODO add app de-authorize event handling
+        if (eventData.object_type == "athlete" && eventData.aspect_type == "update" && eventData.updates["authorized"] == "false") {
+            tokenService.deactivateAthleteToken(eventData.owner_id)
+        }
     }
 
     private fun isDuplicateCreateEvent(eventData: EventDataDto): Boolean {

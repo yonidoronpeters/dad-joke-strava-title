@@ -117,4 +117,9 @@ class OAuthTokenService(
             }
         }
     }
+
+    fun deactivateAthleteToken(athleteId: String) {
+        val athleteToken = repository.findOne(athleteId)
+        repository.save(AthleteToken(athleteToken.copy(is_active = false)))
+    }
 }

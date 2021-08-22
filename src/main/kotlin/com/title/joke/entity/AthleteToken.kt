@@ -15,4 +15,14 @@ data class AthleteToken(
     val expires_at: Long = 0,
     @Column(nullable = false, columnDefinition = "boolean default true")
     val is_active: Boolean = true
-)
+) {
+    constructor(fromToken: AthleteToken) : this(
+        fromToken.id,
+        fromToken.firstName,
+        fromToken.lastName,
+        fromToken.access_token,
+        fromToken.refresh_token,
+        fromToken.expires_at,
+        fromToken.is_active
+    )
+}
