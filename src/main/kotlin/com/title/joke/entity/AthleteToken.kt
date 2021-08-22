@@ -1,5 +1,6 @@
 package com.title.joke.entity
 
+import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Id
 
@@ -11,5 +12,7 @@ data class AthleteToken(
     val lastName: String? = "",
     val access_token: String = "",
     val refresh_token: String = "",
-    val expires_at: Long = 0
+    val expires_at: Long = 0,
+    @Column(nullable = false, columnDefinition = "boolean default true")
+    val is_active: Boolean = true
 )
