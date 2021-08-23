@@ -1,7 +1,7 @@
 package com.title.joke.controller
 
 import com.title.joke.dto.EventDataDto
-import com.title.joke.service.ActivityService
+import com.title.joke.service.EventsService
 import kotlinx.coroutines.GlobalScope
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 class EventsController(
     @Value("\${strava.subscription-id}")
     val subscriptionId: String,
-    private val activityService: ActivityService
+    private val eventsService: EventsService
 ) {
     private val logger = LoggerFactory.getLogger(EventsController::class.java)
 
@@ -24,7 +24,7 @@ class EventsController(
         logger.info("Received event: $eventData")
         if (subscriptionId == eventData.subscription_id) {
             GlobalScope.launch {
-                activityService.updateActivity(eventData)
+                eventsService.updateActivity(eventData)
             }
             return ResponseEntity.ok().build()
         }
