@@ -104,13 +104,10 @@ class OAuthTokenService(
             is Result.Success -> {
                 val dto = result.get()
                 logger.info(dto.toString())
-                val refreshedAthleteToken = AthleteToken(
-                    athleteEntity.id,
-                    athleteEntity.firstName,
-                    athleteEntity.lastName,
-                    dto.access_token,
-                    dto.refresh_token,
-                    dto.expires_at
+                val refreshedAthleteToken = AthleteToken(athleteEntity.copy(
+                    access_token = dto.access_token,
+                    refresh_token = dto.refresh_token,
+                    expires_at = dto.expires_at)
                 )
                 repository.save(refreshedAthleteToken)
                 return "Bearer ${refreshedAthleteToken.access_token}"
