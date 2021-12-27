@@ -16,7 +16,8 @@ class ActivityUpdatedEventHandler(
 
     override fun handle(event: EventDataDto) {
         if (event.updates.containsKey("title") &&
-            event.updates["title"]?.trim().equals("next title", ignoreCase = true)
+            (event.updates["title"]?.trim().equals("next title", ignoreCase = true) ||
+                    event.updates["title"]?.trim().equals("n", ignoreCase = true))
         ) {
             logger.info("User requested different title for activity: ${event.object_id}")
             titleService.updateTitle(event)
