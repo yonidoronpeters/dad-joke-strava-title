@@ -51,6 +51,7 @@ class TwitterDadJokeService(
                 }
             }
         } while (pageCounter++ < pageNumber)
-        return dto.data[tweetNumber].text
+        val joke = dto.data[tweetNumber].text
+        return if (joke.startsWith("RT ")) generateTitle() else joke
     }
 }
