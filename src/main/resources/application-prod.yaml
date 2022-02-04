@@ -9,7 +9,7 @@ spring:
   datasource:
     url: ${SPRING_DATASOURCE_URL}
     username: ${SPRING_DATASOURCE_USERNAME}
-    password: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
 
 strava:
   push-subscription-url: https://www.strava.com/api/v3/push_subscriptions
@@ -24,3 +24,6 @@ joke:
   callback-url: ${APP_URL}/subscribe/callback
   redirect-url: ${APP_URL}/oauth/exchange_token
   verify-token: ${STRAVA_VERIFY_TOKEN}
+twitter:
+  token: ${TWITTER_BEARER_TOKEN}
+  api-url: "https://api.twitter.com/2"

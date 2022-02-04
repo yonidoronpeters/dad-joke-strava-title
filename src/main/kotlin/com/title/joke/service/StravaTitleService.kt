@@ -11,6 +11,7 @@ import com.github.kittinunf.result.Result
 import com.title.joke.dto.ActivityDto
 import com.title.joke.dto.EventDataDto
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 
@@ -19,6 +20,7 @@ class StravaTitleService(
     @Value("\${strava.base-activity-url}")
     val baseActivityUrl: String,
     private val tokenService: OAuthTokenService,
+    @Qualifier("twitterDadJokeService")
     private val titleService: TitleService
 ) {
     private val logger = LoggerFactory.getLogger(StravaTitleService::class.java)
