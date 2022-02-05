@@ -30,17 +30,18 @@ class SubscriptionService(
     fun createSubscription(): String {
         logger.info("Creating Strava event subscription for app")
 
-        FuelManager.instance.baseParams = listOf(
-            "client_id" to clientId,
-            "client_secret" to clientSecret,
-            "callback_url" to callbackUrl,
-            "verify_token" to verifyToken
-        )
         val mapper = ObjectMapper().registerKotlinModule()
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
         val (_, _, result) = subscriptionUrl
-            .httpPost()
+            .httpPost(
+                listOf(
+                    "client_id" to clientId,
+                    "client_secret" to clientSecret,
+                    "callback_url" to callbackUrl,
+                    "verify_token" to verifyToken
+                )
+            )
             .responseObject<SubscriptionDto>(mapper)
 
         when (result) {
