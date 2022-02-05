@@ -30,17 +30,18 @@ class OAuthTokenService(
     private val logger = LoggerFactory.getLogger(OAuthTokenService::class.java)
 
     fun authorizeApp(authorizationCode: String) {
-        FuelManager.instance.baseParams = listOf(
-            "client_id" to clientId,
-            "client_secret" to clientSecret,
-            "code" to authorizationCode,
-            "grant_type" to "authorization_code"
-        )
         val mapper = ObjectMapper().registerKotlinModule()
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
         val (_, _, result) = stravaOAuthTokenUrl
-            .httpPost()
+            .httpPost(
+                listOf(
+                    "client_id" to clientId,
+                    "client_secret" to clientSecret,
+                    "code" to authorizationCode,
+                    "grant_type" to "authorization_code"
+                )
+            )
             .responseObject<TokenDto>(mapper)
 
         when (result) {
@@ -81,17 +82,18 @@ class OAuthTokenService(
 
     private fun refreshToken(athleteEntity: AthleteToken): String {
         logger.debug("Refreshing token for athlete: ${athleteEntity.id}")
-        FuelManager.instance.baseParams = listOf(
-            "client_id" to clientId,
-            "client_secret" to clientSecret,
-            "grant_type" to "refresh_token",
-            "refresh_token" to athleteEntity.refresh_token
-        )
         val mapper = ObjectMapper().registerKotlinModule()
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
         val (_, response, result) = stravaOAuthTokenUrl
-            .httpPost()
+            .httpPost(
+                listOf(
+                    "client_id" to clientId,
+                    "client_secret" to clientSecret,
+                    "grant_type" to "refresh_token",
+                    "refresh_token" to athleteEntity.refresh_token
+                )
+            )
             .responseObject<RefreshTokenDto>(mapper)
 
         when (result) {
@@ -104,10 +106,12 @@ class OAuthTokenService(
             is Result.Success -> {
                 val dto = result.get()
                 logger.info(dto.toString())
-                val refreshedAthleteToken = AthleteToken(athleteEntity.copy(
-                    access_token = dto.access_token,
-                    refresh_token = dto.refresh_token,
-                    expires_at = dto.expires_at)
+                val refreshedAthleteToken = AthleteToken(
+                    athleteEntity.copy(
+                        access_token = dto.access_token,
+                        refresh_token = dto.refresh_token,
+                        expires_at = dto.expires_at
+                    )
                 )
                 repository.save(refreshedAthleteToken)
                 return "Bearer ${refreshedAthleteToken.access_token}"
