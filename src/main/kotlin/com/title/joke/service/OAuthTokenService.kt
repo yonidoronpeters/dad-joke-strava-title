@@ -1,9 +1,6 @@
 package com.title.joke.service
 
-import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import com.github.kittinunf.fuel.core.FuelManager
 import com.github.kittinunf.fuel.httpPost
 import com.github.kittinunf.fuel.jackson.responseObject
 import com.github.kittinunf.result.Result
@@ -25,14 +22,12 @@ class OAuthTokenService(
     val clientSecret: String,
     @Value("\${strava.auth.token-url}")
     val stravaOAuthTokenUrl: String,
-    private val repository: AthleteTokenRepository
+    private val repository: AthleteTokenRepository,
+    private val mapper: ObjectMapper
 ) {
     private val logger = LoggerFactory.getLogger(OAuthTokenService::class.java)
 
     fun authorizeApp(authorizationCode: String) {
-        val mapper = ObjectMapper().registerKotlinModule()
-            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-
         val (_, _, result) = stravaOAuthTokenUrl
             .httpPost(
                 listOf(
@@ -82,8 +77,6 @@ class OAuthTokenService(
 
     private fun refreshToken(athleteEntity: AthleteToken): String {
         logger.debug("Refreshing token for athlete: ${athleteEntity.id}")
-        val mapper = ObjectMapper().registerKotlinModule()
-            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
         val (_, response, result) = stravaOAuthTokenUrl
             .httpPost(

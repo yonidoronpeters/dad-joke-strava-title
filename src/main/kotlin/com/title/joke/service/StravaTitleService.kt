@@ -1,8 +1,6 @@
 package com.title.joke.service
 
-import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import com.github.kittinunf.fuel.httpGet
 import com.github.kittinunf.fuel.httpPut
 import com.github.kittinunf.fuel.jackson.objectBody
@@ -21,7 +19,8 @@ class StravaTitleService(
     val baseActivityUrl: String,
     private val tokenService: OAuthTokenService,
     @Qualifier("twitterDadJokeService")
-    private val titleService: TitleService
+    private val titleService: TitleService,
+    private val mapper: ObjectMapper
 ) {
     private val logger = LoggerFactory.getLogger(StravaTitleService::class.java)
 
@@ -36,9 +35,7 @@ class StravaTitleService(
     private fun updateTitleOnStrava(bearerToken: String, activityTitle: String, event: EventDataDto) {
         logger.info("Updating activity title for $baseActivityUrl${event.object_id}")
 
-        val mapper = ObjectMapper().registerKotlinModule()
-            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-        val existingDescription = getDescription(mapper, bearerToken, event.object_id)
+        val existingDescription = getDescription(bearerToken, event.object_id)
         val newDescription = generateDescription(existingDescription)
         val activity = ActivityDto(name = activityTitle, description = newDescription, id = event.object_id)
 
@@ -73,7 +70,7 @@ class StravaTitleService(
         return DESCRIPTION
     }
 
-    private fun getDescription(mapper: ObjectMapper, bearerToken: String, activityId: String): String? {
+    private fun getDescription(bearerToken: String, activityId: String): String? {
         val (_, response, result) = "$baseActivityUrl$activityId"
             .httpGet()
             .header("Authorization", bearerToken)
