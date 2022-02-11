@@ -1,8 +1,6 @@
 package com.title.joke.service
 
-import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import com.github.kittinunf.fuel.httpGet
 import com.github.kittinunf.fuel.jackson.responseObject
 import com.github.kittinunf.result.Result
@@ -16,7 +14,8 @@ class TwitterDadJokeService(
     @Value("\${twitter.api-url}")
     val twitterApiUrl: String,
     @Value("\${twitter.token}")
-    val twitterToken: String
+    val twitterToken: String,
+    private val mapper: ObjectMapper
 ) : TitleService {
     private val logger = LoggerFactory.getLogger(TwitterDadJokeService::class.java)
     private val maxResults = 50
@@ -24,8 +23,6 @@ class TwitterDadJokeService(
     override fun generateTitle(): String {
         logger.info("Getting dad joke from Twitter")
 
-        val mapper = ObjectMapper().registerKotlinModule()
-            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
         var pageCounter = 0
         var paginationToken: String? = null
         val pageNumber = (0..10).random()

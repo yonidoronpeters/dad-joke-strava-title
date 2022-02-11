@@ -1,9 +1,6 @@
 package com.title.joke.service
 
-import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import com.github.kittinunf.fuel.core.FuelManager
 import com.github.kittinunf.fuel.httpPost
 import com.github.kittinunf.fuel.jackson.responseObject
 import com.github.kittinunf.result.Result
@@ -23,15 +20,13 @@ class SubscriptionService(
     @Value("\${joke.verify-token}")
     val verifyToken: String,
     @Value("\${strava.push-subscription-url}")
-    val subscriptionUrl: String
+    val subscriptionUrl: String,
+    private val mapper: ObjectMapper
 ) {
     private val logger = LoggerFactory.getLogger(SubscriptionService::class.java)
 
     fun createSubscription(): String {
         logger.info("Creating Strava event subscription for app")
-
-        val mapper = ObjectMapper().registerKotlinModule()
-            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
         val (_, _, result) = subscriptionUrl
             .httpPost(
