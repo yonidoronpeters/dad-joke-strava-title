@@ -49,6 +49,6 @@ class TwitterDadJokeService(
             }
         } while (pageCounter++ < pageNumber)
         val joke = dto.data[tweetNumber].text
-        return if (joke.startsWith("RT ") || joke.contains("https?://".toRegex())) generateTitle() else joke.replace("\n\n", "\n")
+        return if (joke.startsWith("RT ") || joke.contains("https?://|@".toRegex())) generateTitle() else joke.replace("\n\n", "\n")
     }
 }
