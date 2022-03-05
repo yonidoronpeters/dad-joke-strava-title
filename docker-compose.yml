@@ -1,0 +1,42 @@
+version: '3'
+
+services:
+  dad-joke-app:
+    container_name: dad-joke-app
+#    restart: on-failure
+    build:
+      context: .
+    ports:
+      - "5000:5000"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/joke
+      - SPRING_DATASOURCE_USERNAME=${JOKE_DB_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${JOKE_DB_PASSWORD}
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - STRAVA_CLIENT_ID=${STRAVA_CLIENT_ID}
+      - STRAVA_CLIENT_SECRET=${STRAVA_CLIENT_SECRET}
+      - STRAVA_VERIFY_TOKEN=${STRAVA_VERIFY_TOKEN}
+      - STRAVA_SUBSCRIPTION_ID=${STRAVA_SUBSCRIPTION_ID}
+      - TWITTER_BEARER_TOKEN=${TWITTER_BEARER_TOKEN}
+      - APP_URL=${APP_URL}
+      - SPRING_PROFILES_ACTIVE=local
+    links:
+      - db
+    depends_on:
+      - db
+
+  db:
+    image: 'postgres:13.1-alpine'
+    container_name: db
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=${JOKE_DB_USERNAME}
+      - POSTGRES_PASSWORD=${JOKE_DB_PASSWORD}
+      - POSTGRES_DB=joke
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER}" ]
+      interval: 1s
+      timeout: 15s
+      retries: 15

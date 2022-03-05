@@ -57,3 +57,13 @@ compileKotlin {
         languageVersion = "1.3"
     }
 }
+
+task dockerBuild(type: Exec) {
+    commandLine 'docker-compose', '-f', 'docker-compose.yml', 'build'
+}
+task dockerStart(type: Exec) {
+    commandLine 'docker-compose', '-f', 'docker-compose.yml', 'up', '--force-recreate'
+}
+task dockerDown(type: Exec) {
+    commandLine 'docker-compose', '-f', 'docker-compose.yml', 'down'
+}
